@@ -3,3 +3,10 @@ languageCode = 'pt-br'
 title = 'Broken Semantics'
 theme = 'hugo-theme-stack'
 contentDir = "content"
+
+[deployment]
+  [[deployment.targets]]
+    name = 'production'
+    url = 's3://broken-semantics?region=sa-east-1'
+    invalidateCDN = true
+    cloudFrontDistributionID = 'E1IQ2IVCHRKLEW'

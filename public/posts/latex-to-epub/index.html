@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Intro Recently I was drawn to research more about digital publishing and digital formats as part of a collaboration with an independent publisher and my findings about the (probable) state of the art on conversion techniques may be of some use to other publishers or tech enthusiasts trying to share their work on more adaptative formats than an old PDF.\nThe initial goal of the project was to convert dozens of already published books to a digital format capable of being distributed on the most number of platforms as possible. Those books were stored as LaTeX projects on Overleaf but digital publication wasn&rsquo;t a priority at the time of editing and that reflects into the usage of commands and packages to support physical attributes of the document but a complete lack of precautions to help digital formats. Since the books are copyrighted, all the examples on this article will use my own graduation monography.\n">
+<title>Preparing LaTeX projects for EPUB publication</title>
+
+<link rel='canonical' href='http://localhost:1313/posts/latex-to-epub/'>
+
+<link rel="stylesheet" href="/scss/style.min.b0e76e98cdd4f7082d1fc36f7af7e0843a81201db2197c03ca426751dc923735.css"><meta property='og:title' content="Preparing LaTeX projects for EPUB publication">
+<meta property='og:description' content="Intro Recently I was drawn to research more about digital publishing and digital formats as part of a collaboration with an independent publisher and my findings about the (probable) state of the art on conversion techniques may be of some use to other publishers or tech enthusiasts trying to share their work on more adaptative formats than an old PDF.\nThe initial goal of the project was to convert dozens of already published books to a digital format capable of being distributed on the most number of platforms as possible. Those books were stored as LaTeX projects on Overleaf but digital publication wasn&rsquo;t a priority at the time of editing and that reflects into the usage of commands and packages to support physical attributes of the document but a complete lack of precautions to help digital formats. Since the books are copyrighted, all the examples on this article will use my own graduation monography.\n">
+<meta property='og:url' content='http://localhost:1313/posts/latex-to-epub/'>
+<meta property='og:site_name' content='Broken Semantics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts' /><meta property='article:tag' content='LaTeX' /><meta property='article:tag' content='EPUB' /><meta property='article:tag' content='books' /><meta property='article:published_time' content='2025-12-20T21:19:20-03:00'/><meta property='article:modified_time' content='2025-12-20T21:19:20-03:00'/>
+<meta name="twitter:title" content="Preparing LaTeX projects for EPUB publication">
+<meta name="twitter:description" content="Intro Recently I was drawn to research more about digital publishing and digital formats as part of a collaboration with an independent publisher and my findings about the (probable) state of the art on conversion techniques may be of some use to other publishers or tech enthusiasts trying to share their work on more adaptative formats than an old PDF.\nThe initial goal of the project was to convert dozens of already published books to a digital format capable of being distributed on the most number of platforms as possible. Those books were stored as LaTeX projects on Overleaf but digital publication wasn&rsquo;t a priority at the time of editing and that reflects into the usage of commands and packages to support physical attributes of the document but a complete lack of precautions to help digital formats. Since the books are copyrighted, all the examples on this article will use my own graduation monography.\n">
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/images/avatar_hu_e0112561b88ffd86.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Broken Semantics</a></h1>
+            <h2 class="site-description">Work hard, study well, and eat and sleep plenty! That is the Turtle Hermit way!</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/leviosar'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://x.com/jaovem'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#digital-documents-from-ink-to-e-ink">Digital documents: from ink to e-ink</a></li>
+    <li><a href="#document-conversion">Document conversion</a>
+      <ol>
+        <li><a href="#pandoc">Pandoc</a></li>
+        <li><a href="#first-conversion-experiment">First conversion experiment</a>
+          <ol>
+            <li><a href="#pandoc-filters">Pandoc filters</a></li>
+            <li><a href="#math-support">Math support</a></li>
+          </ol>
+        </li>
+        <li><a href="#post-processing">Post processing</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/digital-publishing/" >
+                Digital Publishing
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/latex-to-epub/">Preparing LaTeX projects for EPUB publication</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2025-12-20T21:19:20-03:00'>Dec 20, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    11 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="intro">Intro
+</h2><p>Recently I was drawn to research more about digital publishing and digital formats as part of a collaboration with an independent publisher and my findings about the (probable) state of the art on conversion techniques may be of some use to other publishers or tech enthusiasts trying to share their work on more adaptative formats than an old PDF.</p>
+<p>The initial goal of the project was to convert dozens of already published books to a digital format capable of being distributed on the most number of platforms as possible. Those books were stored as LaTeX projects on Overleaf but digital publication wasn&rsquo;t a priority at the time of editing and that reflects into the usage of commands and packages to support physical attributes of the document but a complete lack of precautions to help digital formats. Since the books are copyrighted, all the examples on this article will use my own graduation monography.</p>
+<h2 id="summary">Summary
+</h2><p>After reading this you&rsquo;ll know:</p>
+<!-- TODO: create custom style for numbered lists -->
+<ol>
+<li>A little history about digital formats</li>
+<li>How to convert a .tex project to a .epub file</li>
+<li>How to fix common issues with pre-processing</li>
+<li>How to enhance the .epub file for publishing</li>
+</ol>
+<p>If you want to skip directly to action, start on <a class="link" href="./#document-conversion" >Document Conversion</a></p>
+<h2 id="digital-documents-from-ink-to-e-ink">Digital documents: from ink to e-ink
+</h2><p>Digital documents were made part of most of our lives in the last two decades and are taken for granted by people. Bills, books and newspapers are just some examples of &ldquo;digital things&rdquo; for my generation that were very much &ldquo;not digital things&rdquo; to my mother&rsquo;s generation and the ones before hers. Before PDFs, the web and even ASCII, text was being stored and presented by Williams and Kilburn [1] on the first ever register of a digital text representation. It&rsquo;s a long stretch to call this a document: it doesn&rsquo;t have a specific format, it&rsquo;s stored directly on memory positions and it didn&rsquo;t fits the dictionary definition for document.</p>
+<p><img src="/posts/latex-to-epub/crt_store.webp"
+	width="604"
+	height="430"
+	srcset="/posts/latex-to-epub/crt_store_hu_da6f636eb01e7815.webp 480w, /posts/latex-to-epub/crt_store_hu_346cabc913ea3cff.webp 1024w"
+	loading="lazy"
+	
+		alt="CRT Store"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="140"
+		data-flex-basis="337px"
+	
+></p>
+<p>Even so, this weird pixelated message serves to evidentiate a critical point that will guide our discussion for the next moments. There&rsquo;s a fundamental difference between physical and digital in this context and that&rsquo;s how information is stored versus how it&rsquo;s represented to the reader. On physical documents the information is stored in exactly the same shape that it is viewed by the eyes, while for digital documents information is concealed on a quasi-magic black box that is then interpreted to us by a renderer so we can access it. Even the most plain .txt file in your computer is actually encoded to bytes that represents the actual characters you are trying to write. From this we can extract the important conclusion that digital documents have as it&rsquo;s two main components the source file and the rendered file.</p>
+<p>Since computer scientists always enjoyed a finite but very long list of abstractions, we created markup languages to make possible to represent not only the text but formatting and style of our really important documents. This step empowered computers to take on new tasks and solve new problemas for humans but also created an annoying problem that took decades to solve.</p>
+<p>Imagine that I now have the JML (João Markup Language) and that I created a renderer which represents <code>#--#</code> as a horizontal divider for documents that spans for 300 pixels (the width of my screen) and that works beautifully to me. To share my work with others I send a file on my new language to some colleagues and each one of them writes a renderer that treats <code>#--#</code> as a different number of pixels, following their own screens. My source file is the same, so you would think that the document is the same, but each reader is actually seeing something different and from their point of view these are several different documents.</p>
+<p>People were furious, marching on the streets with torches and pitchforks demanding for a solution to this problem, they were all screaming for portable documents that could be shared between different computers and look the same. Adobe saw this and had the brilliant idea of actually creating a Portable Document Format, giving birth to PDF. First as a exclusively proprietary format, but after some years the specification entered the umbrella of ISO and then became one of the most used file formats of all time.</p>
+<p>That should be the happy ending of our history, but times change and as the needs of the future diverge from the past, devices began to have different screen proportions, purposes and the web was established as humanity&rsquo;s new Eden with dynamic document rendering. All these ingredients contributed to the search for a standard that could manage to adapt itself for different device screens and the answer were already there in the web, literally. The first open standard for digital publications was released on 1999 and named OEBPS, based on XHTML and CSS organized by a manifest file with a predefined set of keys that would guide software into rendering common elements of digital publications.</p>
+<p>All of this was happening at the same time that some MIT undergrads were trying to come up with a technology that could bring digital publications to a new era, a material capable of delivering the look &amp; fell of paper while being reusable and electronic. The crafting of e-Ink elevated the potential of portable devices focused on digital documents with lower power usage, better visibility while outdoors and a comfortable prolonged reading experience, since this material doesn&rsquo;t emit light by itself. The first commercial use for e-Ink came in 2004 with Sony Librie but by 2010 it was already flooding the market with Kindles, Kobos and other devices and the flaws of the current formats were being exposed.</p>
+<p>OEBPS didn&rsquo;t kept the rhythim of web standards and technologies, falling behind on new internationalization and styling practices that were being adopted on websites, like RTL and vertical writing systems. A loose package structure was also a problem with OEBPS, each editing tool could generate a different file or folder schema and this chaotic environment was a barrier for new adopters. All this issues we&rsquo;re part of the motivation for the development of a new standard and EPUB 2.0 (a direct successor from OEBPS 1.2) was published by the IDPF with changes like a defined format for metadata, a container package structure and updates to the allowed contents.</p>
+<p>EPUB was updated a couple more times, the current version is EPUB 3.2, rising as the de-facto industry format for digital publications and even proprietary variations like AWZ3 are just wrappers for the open specification, adding features like DRM and vendor-specific protections. The whole ecosystem for publishers is built around EPUB, all modern e-readers support it, there are new features being discussed and will gradually be implemented.</p>
+<pre class="mermaid">
+  timeline
+    title History of Digital Documents
+    1946 : CRT Store
+    1996 : e-Ink Patent
+    1997 : PDF Specification
+    1999 : OEBPS Specification
+    2004 : First e-Ink commercial device
+    2007 : EPUB 2.0
+         : First Kindle device
+    2011 : EPUB 3.0
+</pre>
+<h2 id="document-conversion">Document conversion
+</h2><p>After understanding a bit more about different document types and the caracteristics they can carry it was clear to me why conversions are such a big problem: documents formats are languages on their own and as said by Umberto Eco, translation is the art of failure</p>
+<p>There are constructs specifics to one language that will never be able to be transposed to another, like LaTeX custom commands or HTML <code>&lt;iframe&gt;</code> tags. There&rsquo;s also features that can be reimaginated like a Markdown link becoming an HTML <code>&lt;a&gt;</code> or an HTML table transformed into ASCII for a .txt file. Finally there&rsquo;s fully compatible elements like HTML and Markdown headings with multiple levels. Usually, the more complex an element is, harder is the process of translating it to a different language.</p>
+<h3 id="pandoc">Pandoc
+</h3><p>Pandoc aims to be an universal digital document converter, it&rsquo;s open source, written in Haskell, released under the GPL license and created by professor John MacFarlane. The software works by converting the source file into an intermediate document representation and then transforming this into the target file format. This architecture makes it easier to implement new formats since it&rsquo;s not necessary to make all the formats talk to each other, just make them compatible with the intermediate format.</p>
+<p>That strenght comes with some limitations, the most notable being that only features contained within the scope of this middle format are supported by Pandoc. As an example, if you try to convert a HTML document that uses some fancy CSS property like a gradient for background the result will be a blank background on the target format. That means that you&rsquo;ll probably never get a lossless conversion while using pandoc on real-world scenarions, but personally I think this cost is cheap compared to being able to convert between literally hundreds of combinations of formats.</p>
+<p>Installing pandoc is as easy as running <code>brew install pandoc</code> on MacOS or following instructions on their <a class="link" href="https://pandoc.org/installing.html"  target="_blank" rel="noopener"
+    >installation page</a> for your preferred platform.</p>
+<h3 id="first-conversion-experiment">First conversion experiment
+</h3><p>With pandoc installed, I&rsquo;ve tried the most straight forward approach just converting the whole file parting from <code>main.text</code> with complete content. The command structure for pandoc is:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># pandoc --from={source} --to={target} source.extension -o target.extension</span>
+</span></span><span class="line"><span class="cl">pandoc --from<span class="o">=</span>latex --to<span class="o">=</span>epub3 main.tex -o main.epub
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/posts/latex-to-epub/01.png"
+	width="2048"
+	height="612"
+	srcset="/posts/latex-to-epub/01_hu_8555e822d88d06e3.png 480w, /posts/latex-to-epub/01_hu_8520691a3de67c5f.png 1024w"
+	loading="lazy"
+	
+		alt="Pandoc output on first try"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="334"
+		data-flex-basis="803px"
+	
+></p>
+<p>Running this on my project raised some warnings that will serve to examplify issues on the LaTeX to EPUB pipeline. First of all, pandoc tries to force the conversion even if fails to identify some constructs on your source file, as seen on those warnings concerning TeX math functions and a .sty file. Despite those issues, a main.epub file was generated and contained a fair version of my source file and this is the time for a first revision.</p>
+<p>The first caught issues were relared to custom commands that pandoc can&rsquo;t expand and are then stripped leaving you with just the text content. Some LaTeX blocks we&rsquo;re also compromised, like the following block that was rendered as <code>5.5cm Este trabalho é dedicado a todos que não chegaram aqui comigo.</code> without the width constraints. This happens because pandoc doesn&rsquo;t actually process the <code>adjustwidth</code> environment since it&rsquo;s not part of the lowest TeX primitives and comes from the <code>changepage</code> package. Pandoc then chooses to display the environment args as content, this behavior can be configured to render the full environment as text on the final format but another solution is available with some code.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-latex" data-lang="latex"><span class="line"><span class="cl"><span class="k">\begin</span><span class="nb">{</span>adjustwidth*<span class="nb">}{}{</span>5.5cm<span class="nb">}</span>     
+</span></span><span class="line"><span class="cl">    Este trabalho é dedicado a todos que não chegaram aqui comigo.
+</span></span><span class="line"><span class="cl"><span class="k">\end</span><span class="nb">{</span>adjustwidth*<span class="nb">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="pandoc-filters">Pandoc filters
+</h4><p>By writing filters on Pandoc we can customize the conversion process with our own logic and apply virtually any transformations needed to the target file on-the-fly using scripting languages. Pandoc ships with a Lua interpreter since 2.0, but you can also use another languages for filters by using an interpreter available on a system-wide context. I should also note that filters on other languages will have to operate on the JSON AST version of the document, while Lua filters receive a native object from Pandoc.</p>
+<p>Below there&rsquo;s an example of how to extract content from a specific latex environment by using the AST generated by Pandoc to remove the first element of a <code>adjustwidth</code> environment. The proccess is quite boring and writing more comprehensible filters will be even harder to write, but this is a very powerful tool that can be reused for multiple projects and keep a common level of quality between them.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-lua" data-lang="lua"><span class="line"><span class="cl"><span class="kr">function</span> <span class="nf">Div</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">if</span> <span class="n">el.classes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">~=</span> <span class="s2">&#34;adjustwidth&#34;</span> <span class="ow">and</span> <span class="n">el.classes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">~=</span> <span class="s2">&#34;adjustwidth*&#34;</span> <span class="kr">then</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">return</span> <span class="n">el</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">end</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">  <span class="n">para</span> <span class="o">=</span> <span class="n">el.content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kr">if</span> <span class="ow">not</span> <span class="n">para</span> <span class="ow">or</span> <span class="n">para.t</span> <span class="o">~=</span> <span class="s2">&#34;Para&#34;</span> <span class="kr">then</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">return</span> <span class="n">el</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kr">if</span> <span class="ow">not</span> <span class="n">para.content</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">para.content</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">t</span> <span class="o">~=</span> <span class="s2">&#34;Span&#34;</span> <span class="kr">then</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">return</span> <span class="n">el</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">table.remove</span><span class="p">(</span><span class="n">para.content</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kr">return</span> <span class="n">el.content</span>
+</span></span><span class="line"><span class="cl"><span class="kr">end</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="math-support">Math support
+</h4><p>Now let&rsquo;s address the math notation warnings that showed up on my first run. Pandoc actually has 3 alternatives for mathematical markup with different caveats that you should balance to your needs when picking a solution. The first and more modern approach is MathML, a markup language designed specifically for this needs that will render beautiful and crisp notation which blends well even for inline math, but has a lack of suport on older devices like earlier generations of Kindles.</p>
+<p>Then we have two alternatives that transforms your equations into images and embed then on your text, providing perfect support for older devices but as the cost of resolution, accessibility and alignment. Webtex converts your equations with online APIs, while Gladtex uses local tools and can generate SVGs to minimize the resolution loss. During my tests it was really frustrating to see how much better MathML is and knowing I&rsquo;ll probably can&rsquo;t use it for the next couple of years, but at least the support is being gradually improved</p>
+<blockquote>
+<p>To use any of the three options all you need to do is append on of this options on the CLI: <code>--mathml</code>, <code>--webtex</code> or <code>--gladtex</code>.</p>
+</blockquote>
+<h3 id="post-processing">Post processing
+</h3><p>While writing filters can be a smart idea for conversion problems that happen often, sometimes an issue is so rare that a custom filter for it isn&rsquo;t worth it and you have to resort to manual proofreading. That&rsquo;s when an EPUB editor comes in handy, allowing you to directly edit the HTML code to adjust small details or fix anything that you couldn&rsquo;t do in the pre-processing steps.</p>
+<p><a class="link" href="https://sigil-ebook.com/sigil/"  target="_blank" rel="noopener"
+    >Sigil</a> is a free and open source EPUB editor that runs on Mac, Linux or Windows and delivers a very solid experience for light editing. It has weakness like the lack of a collaborative environment and a not so good text editor (if you&rsquo;re used to more powerful editors like vscode)</p>
+<p>// Sigil installation
+// Pre processing
+// Post processing
+// Final results</p>
+<p>[1] - <a class="link" href="https://medium.com/@aareed/the-first-digital-text-on-a-screen-7c391432dbdd"  target="_blank" rel="noopener"
+    >https://medium.com/@aareed/the-first-digital-text-on-a-screen-7c391432dbdd</a></p>
+<p>[2] - <a class="link" href="https://www.w3.org/community/epub3/"  target="_blank" rel="noopener"
+    >https://www.w3.org/community/epub3/</a></p>
+<p>[3] - <a class="link" href="https://parsio.io/blog/a-brief-history-of-pdf/"  target="_blank" rel="noopener"
+    >https://parsio.io/blog/a-brief-history-of-pdf/</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/latex/">LaTeX</a>
+        
+            <a href="/tags/epub/">EPUB</a>
+        
+            <a href="/tags/books/">Books</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2024 - 
+        
+        2026 Broken Semantics
+    </section>
+    
+    <section class="powerby">
+        
+            And still here. <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.32.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.c04a1c80f22406cd031d7086c91bd96c556057eecb3829ef6743d44b06aacca5.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+
+    const isDark = document.body.classList.contains('dark');
+    console.log('Current color scheme is dark:', isDark);
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: isDark ? 'dark' : 'neutral'
+    });
+  </script>
+
+
+    </body>
+</html>

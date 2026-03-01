@@ -5,8 +5,180 @@
         <link>http://localhost:1313/</link>
         <description>Recent content on Broken Semantics</description>
         <generator>Hugo -- gohugo.io</generator>
-        <language>en</language>
-        <lastBuildDate>Sat, 04 May 2024 13:52:19 -0300</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <language>en-us</language>
+        <lastBuildDate>Sat, 20 Dec 2025 21:19:20 -0300</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Preparing LaTeX projects for EPUB publication</title>
+        <link>http://localhost:1313/posts/latex-to-epub/</link>
+        <pubDate>Sat, 20 Dec 2025 21:19:20 -0300</pubDate>
+        
+        <guid>http://localhost:1313/posts/latex-to-epub/</guid>
+        <description>&lt;h2 id=&#34;intro&#34;&gt;Intro
+&lt;/h2&gt;&lt;p&gt;Recently I was drawn to research more about digital publishing and digital formats as part of a collaboration with an independent publisher and my findings about the (probable) state of the art on conversion techniques may be of some use to other publishers or tech enthusiasts trying to share their work on more adaptative formats than an old PDF.&lt;/p&gt;
+&lt;p&gt;The initial goal of the project was to convert dozens of already published books to a digital format capable of being distributed on the most number of platforms as possible. Those books were stored as LaTeX projects on Overleaf but digital publication wasn&amp;rsquo;t a priority at the time of editing and that reflects into the usage of commands and packages to support physical attributes of the document but a complete lack of precautions to help digital formats. Since the books are copyrighted, all the examples on this article will use my own graduation monography.&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary
+&lt;/h2&gt;&lt;p&gt;After reading this you&amp;rsquo;ll know:&lt;/p&gt;
+&lt;!-- TODO: create custom style for numbered lists --&gt;
+&lt;ol&gt;
+&lt;li&gt;A little history about digital formats&lt;/li&gt;
+&lt;li&gt;How to convert a .tex project to a .epub file&lt;/li&gt;
+&lt;li&gt;How to fix common issues with pre-processing&lt;/li&gt;
+&lt;li&gt;How to enhance the .epub file for publishing&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If you want to skip directly to action, start on &lt;a class=&#34;link&#34; href=&#34;./#document-conversion&#34; &gt;Document Conversion&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;digital-documents-from-ink-to-e-ink&#34;&gt;Digital documents: from ink to e-ink
+&lt;/h2&gt;&lt;p&gt;Digital documents were made part of most of our lives in the last two decades and are taken for granted by people. Bills, books and newspapers are just some examples of &amp;ldquo;digital things&amp;rdquo; for my generation that were very much &amp;ldquo;not digital things&amp;rdquo; to my mother&amp;rsquo;s generation and the ones before hers. Before PDFs, the web and even ASCII, text was being stored and presented by Williams and Kilburn [1] on the first ever register of a digital text representation. It&amp;rsquo;s a long stretch to call this a document: it doesn&amp;rsquo;t have a specific format, it&amp;rsquo;s stored directly on memory positions and it didn&amp;rsquo;t fits the dictionary definition for document.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/posts/latex-to-epub/crt_store.webp&#34;
+	width=&#34;604&#34;
+	height=&#34;430&#34;
+	srcset=&#34;http://localhost:1313/posts/latex-to-epub/crt_store_hu_da6f636eb01e7815.webp 480w, http://localhost:1313/posts/latex-to-epub/crt_store_hu_346cabc913ea3cff.webp 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CRT Store&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;140&#34;
+		data-flex-basis=&#34;337px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Even so, this weird pixelated message serves to evidentiate a critical point that will guide our discussion for the next moments. There&amp;rsquo;s a fundamental difference between physical and digital in this context and that&amp;rsquo;s how information is stored versus how it&amp;rsquo;s represented to the reader. On physical documents the information is stored in exactly the same shape that it is viewed by the eyes, while for digital documents information is concealed on a quasi-magic black box that is then interpreted to us by a renderer so we can access it. Even the most plain .txt file in your computer is actually encoded to bytes that represents the actual characters you are trying to write. From this we can extract the important conclusion that digital documents have as it&amp;rsquo;s two main components the source file and the rendered file.&lt;/p&gt;
+&lt;p&gt;Since computer scientists always enjoyed a finite but very long list of abstractions, we created markup languages to make possible to represent not only the text but formatting and style of our really important documents. This step empowered computers to take on new tasks and solve new problemas for humans but also created an annoying problem that took decades to solve.&lt;/p&gt;
+&lt;p&gt;Imagine that I now have the JML (João Markup Language) and that I created a renderer which represents &lt;code&gt;#--#&lt;/code&gt; as a horizontal divider for documents that spans for 300 pixels (the width of my screen) and that works beautifully to me. To share my work with others I send a file on my new language to some colleagues and each one of them writes a renderer that treats &lt;code&gt;#--#&lt;/code&gt; as a different number of pixels, following their own screens. My source file is the same, so you would think that the document is the same, but each reader is actually seeing something different and from their point of view these are several different documents.&lt;/p&gt;
+&lt;p&gt;People were furious, marching on the streets with torches and pitchforks demanding for a solution to this problem, they were all screaming for portable documents that could be shared between different computers and look the same. Adobe saw this and had the brilliant idea of actually creating a Portable Document Format, giving birth to PDF. First as a exclusively proprietary format, but after some years the specification entered the umbrella of ISO and then became one of the most used file formats of all time.&lt;/p&gt;
+&lt;p&gt;That should be the happy ending of our history, but times change and as the needs of the future diverge from the past, devices began to have different screen proportions, purposes and the web was established as humanity&amp;rsquo;s new Eden with dynamic document rendering. All these ingredients contributed to the search for a standard that could manage to adapt itself for different device screens and the answer were already there in the web, literally. The first open standard for digital publications was released on 1999 and named OEBPS, based on XHTML and CSS organized by a manifest file with a predefined set of keys that would guide software into rendering common elements of digital publications.&lt;/p&gt;
+&lt;p&gt;All of this was happening at the same time that some MIT undergrads were trying to come up with a technology that could bring digital publications to a new era, a material capable of delivering the look &amp;amp; fell of paper while being reusable and electronic. The crafting of e-Ink elevated the potential of portable devices focused on digital documents with lower power usage, better visibility while outdoors and a comfortable prolonged reading experience, since this material doesn&amp;rsquo;t emit light by itself. The first commercial use for e-Ink came in 2004 with Sony Librie but by 2010 it was already flooding the market with Kindles, Kobos and other devices and the flaws of the current formats were being exposed.&lt;/p&gt;
+&lt;p&gt;OEBPS didn&amp;rsquo;t kept the rhythim of web standards and technologies, falling behind on new internationalization and styling practices that were being adopted on websites, like RTL and vertical writing systems. A loose package structure was also a problem with OEBPS, each editing tool could generate a different file or folder schema and this chaotic environment was a barrier for new adopters. All this issues we&amp;rsquo;re part of the motivation for the development of a new standard and EPUB 2.0 (a direct successor from OEBPS 1.2) was published by the IDPF with changes like a defined format for metadata, a container package structure and updates to the allowed contents.&lt;/p&gt;
+&lt;p&gt;EPUB was updated a couple more times, the current version is EPUB 3.2, rising as the de-facto industry format for digital publications and even proprietary variations like AWZ3 are just wrappers for the open specification, adding features like DRM and vendor-specific protections. The whole ecosystem for publishers is built around EPUB, all modern e-readers support it, there are new features being discussed and will gradually be implemented.&lt;/p&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+  timeline
+    title History of Digital Documents
+    1946 : CRT Store
+    1996 : e-Ink Patent
+    1997 : PDF Specification
+    1999 : OEBPS Specification
+    2004 : First e-Ink commercial device
+    2007 : EPUB 2.0
+         : First Kindle device
+    2011 : EPUB 3.0
+&lt;/pre&gt;
+&lt;h2 id=&#34;document-conversion&#34;&gt;Document conversion
+&lt;/h2&gt;&lt;p&gt;After understanding a bit more about different document types and the caracteristics they can carry it was clear to me why conversions are such a big problem: documents formats are languages on their own and as said by Umberto Eco, translation is the art of failure&lt;/p&gt;
+&lt;p&gt;There are constructs specifics to one language that will never be able to be transposed to another, like LaTeX custom commands or HTML &lt;code&gt;&amp;lt;iframe&amp;gt;&lt;/code&gt; tags. There&amp;rsquo;s also features that can be reimaginated like a Markdown link becoming an HTML &lt;code&gt;&amp;lt;a&amp;gt;&lt;/code&gt; or an HTML table transformed into ASCII for a .txt file. Finally there&amp;rsquo;s fully compatible elements like HTML and Markdown headings with multiple levels. Usually, the more complex an element is, harder is the process of translating it to a different language.&lt;/p&gt;
+&lt;h3 id=&#34;pandoc&#34;&gt;Pandoc
+&lt;/h3&gt;&lt;p&gt;Pandoc aims to be an universal digital document converter, it&amp;rsquo;s open source, written in Haskell, released under the GPL license and created by professor John MacFarlane. The software works by converting the source file into an intermediate document representation and then transforming this into the target file format. This architecture makes it easier to implement new formats since it&amp;rsquo;s not necessary to make all the formats talk to each other, just make them compatible with the intermediate format.&lt;/p&gt;
+&lt;p&gt;That strenght comes with some limitations, the most notable being that only features contained within the scope of this middle format are supported by Pandoc. As an example, if you try to convert a HTML document that uses some fancy CSS property like a gradient for background the result will be a blank background on the target format. That means that you&amp;rsquo;ll probably never get a lossless conversion while using pandoc on real-world scenarions, but personally I think this cost is cheap compared to being able to convert between literally hundreds of combinations of formats.&lt;/p&gt;
+&lt;p&gt;Installing pandoc is as easy as running &lt;code&gt;brew install pandoc&lt;/code&gt; on MacOS or following instructions on their &lt;a class=&#34;link&#34; href=&#34;https://pandoc.org/installing.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;installation page&lt;/a&gt; for your preferred platform.&lt;/p&gt;
+&lt;h3 id=&#34;first-conversion-experiment&#34;&gt;First conversion experiment
+&lt;/h3&gt;&lt;p&gt;With pandoc installed, I&amp;rsquo;ve tried the most straight forward approach just converting the whole file parting from &lt;code&gt;main.text&lt;/code&gt; with complete content. The command structure for pandoc is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# pandoc --from={source} --to={target} source.extension -o target.extension&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pandoc --from&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;latex --to&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;epub3 main.tex -o main.epub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/posts/latex-to-epub/01.png&#34;
+	width=&#34;2048&#34;
+	height=&#34;612&#34;
+	srcset=&#34;http://localhost:1313/posts/latex-to-epub/01_hu_8555e822d88d06e3.png 480w, http://localhost:1313/posts/latex-to-epub/01_hu_8520691a3de67c5f.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Pandoc output on first try&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;334&#34;
+		data-flex-basis=&#34;803px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;Running this on my project raised some warnings that will serve to examplify issues on the LaTeX to EPUB pipeline. First of all, pandoc tries to force the conversion even if fails to identify some constructs on your source file, as seen on those warnings concerning TeX math functions and a .sty file. Despite those issues, a main.epub file was generated and contained a fair version of my source file and this is the time for a first revision.&lt;/p&gt;
+&lt;p&gt;The first caught issues were relared to custom commands that pandoc can&amp;rsquo;t expand and are then stripped leaving you with just the text content. Some LaTeX blocks we&amp;rsquo;re also compromised, like the following block that was rendered as &lt;code&gt;5.5cm Este trabalho é dedicado a todos que não chegaram aqui comigo.&lt;/code&gt; without the width constraints. This happens because pandoc doesn&amp;rsquo;t actually process the &lt;code&gt;adjustwidth&lt;/code&gt; environment since it&amp;rsquo;s not part of the lowest TeX primitives and comes from the &lt;code&gt;changepage&lt;/code&gt; package. Pandoc then chooses to display the environment args as content, this behavior can be configured to render the full environment as text on the final format but another solution is available with some code.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-latex&#34; data-lang=&#34;latex&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;\begin&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;{&lt;/span&gt;adjustwidth*&lt;span class=&#34;nb&#34;&gt;}{}{&lt;/span&gt;5.5cm&lt;span class=&#34;nb&#34;&gt;}&lt;/span&gt;     
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    Este trabalho é dedicado a todos que não chegaram aqui comigo.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;\end&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;{&lt;/span&gt;adjustwidth*&lt;span class=&#34;nb&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;pandoc-filters&#34;&gt;Pandoc filters
+&lt;/h4&gt;&lt;p&gt;By writing filters on Pandoc we can customize the conversion process with our own logic and apply virtually any transformations needed to the target file on-the-fly using scripting languages. Pandoc ships with a Lua interpreter since 2.0, but you can also use another languages for filters by using an interpreter available on a system-wide context. I should also note that filters on other languages will have to operate on the JSON AST version of the document, while Lua filters receive a native object from Pandoc.&lt;/p&gt;
+&lt;p&gt;Below there&amp;rsquo;s an example of how to extract content from a specific latex environment by using the AST generated by Pandoc to remove the first element of a &lt;code&gt;adjustwidth&lt;/code&gt; environment. The proccess is quite boring and writing more comprehensible filters will be even harder to write, but this is a very powerful tool that can be reused for multiple projects and keep a common level of quality between them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lua&#34; data-lang=&#34;lua&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kr&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;el&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el.classes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;~=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;adjustwidth&amp;#34;&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el.classes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;~=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;adjustwidth*&amp;#34;&lt;/span&gt; &lt;span class=&#34;kr&#34;&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kr&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;n&#34;&gt;para&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el.content&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;para&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;para.t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;~=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Para&amp;#34;&lt;/span&gt; &lt;span class=&#34;kr&#34;&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kr&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;para.content&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;para.content&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;].&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;~=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Span&amp;#34;&lt;/span&gt; &lt;span class=&#34;kr&#34;&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kr&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;n&#34;&gt;table.remove&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;para.content&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;kr&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;el.content&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kr&#34;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;math-support&#34;&gt;Math support
+&lt;/h4&gt;&lt;p&gt;Now let&amp;rsquo;s address the math notation warnings that showed up on my first run. Pandoc actually has 3 alternatives for mathematical markup with different caveats that you should balance to your needs when picking a solution. The first and more modern approach is MathML, a markup language designed specifically for this needs that will render beautiful and crisp notation which blends well even for inline math, but has a lack of suport on older devices like earlier generations of Kindles.&lt;/p&gt;
+&lt;p&gt;Then we have two alternatives that transforms your equations into images and embed then on your text, providing perfect support for older devices but as the cost of resolution, accessibility and alignment. Webtex converts your equations with online APIs, while Gladtex uses local tools and can generate SVGs to minimize the resolution loss. During my tests it was really frustrating to see how much better MathML is and knowing I&amp;rsquo;ll probably can&amp;rsquo;t use it for the next couple of years, but at least the support is being gradually improved&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To use any of the three options all you need to do is append on of this options on the CLI: &lt;code&gt;--mathml&lt;/code&gt;, &lt;code&gt;--webtex&lt;/code&gt; or &lt;code&gt;--gladtex&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;post-processing&#34;&gt;Post processing
+&lt;/h3&gt;&lt;p&gt;While writing filters can be a smart idea for conversion problems that happen often, sometimes an issue is so rare that a custom filter for it isn&amp;rsquo;t worth it and you have to resort to manual proofreading. That&amp;rsquo;s when an EPUB editor comes in handy, allowing you to directly edit the HTML code to adjust small details or fix anything that you couldn&amp;rsquo;t do in the pre-processing steps.&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://sigil-ebook.com/sigil/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Sigil&lt;/a&gt; is a free and open source EPUB editor that runs on Mac, Linux or Windows and delivers a very solid experience for light editing. It has weakness like the lack of a collaborative environment and a not so good text editor (if you&amp;rsquo;re used to more powerful editors like vscode)&lt;/p&gt;
+&lt;p&gt;// Sigil installation
+// Pre processing
+// Post processing
+// Final results&lt;/p&gt;
+&lt;p&gt;[1] - &lt;a class=&#34;link&#34; href=&#34;https://medium.com/@aareed/the-first-digital-text-on-a-screen-7c391432dbdd&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://medium.com/@aareed/the-first-digital-text-on-a-screen-7c391432dbdd&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] - &lt;a class=&#34;link&#34; href=&#34;https://www.w3.org/community/epub3/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.w3.org/community/epub3/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] - &lt;a class=&#34;link&#34; href=&#34;https://parsio.io/blog/a-brief-history-of-pdf/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://parsio.io/blog/a-brief-history-of-pdf/&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Another oppinionated API building guide</title>
         <link>http://localhost:1313/posts/welcome/</link>
         <pubDate>Sat, 04 May 2024 13:52:19 -0300</pubDate>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Posts on Broken Semantics</title>
-        <link>http://localhost:1313/posts/</link>
-        <description>Recent content in Posts on Broken Semantics</description>
+        <title>Books on Broken Semantics</title>
+        <link>http://localhost:1313/tags/books/</link>
+        <description>Recent content in Books on Broken Semantics</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 20 Dec 2025 21:19:20 -0300</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 20 Dec 2025 21:19:20 -0300</lastBuildDate><atom:link href="http://localhost:1313/tags/books/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Preparing LaTeX projects for EPUB publication</title>
         <link>http://localhost:1313/posts/latex-to-epub/</link>
         <pubDate>Sat, 20 Dec 2025 21:19:20 -0300</pubDate>
@@ -176,15 +176,6 @@
     &gt;https://www.w3.org/community/epub3/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;[3] - &lt;a class=&#34;link&#34; href=&#34;https://parsio.io/blog/a-brief-history-of-pdf/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://parsio.io/blog/a-brief-history-of-pdf/&lt;/a&gt;&lt;/p&gt;
-</description>
-        </item>
-        <item>
-        <title>Another oppinionated API building guide</title>
-        <link>http://localhost:1313/posts/welcome/</link>
-        <pubDate>Sat, 04 May 2024 13:52:19 -0300</pubDate>
-        
-        <guid>http://localhost:1313/posts/welcome/</guid>
-        <description>&lt;p&gt;Welcome, welcome to a mad man&amp;rsquo;s extravaganza&lt;/p&gt;
 </description>
         </item>
         

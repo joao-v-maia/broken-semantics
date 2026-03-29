@@ -7,6 +7,6 @@ contentDir = "content"
 [deployment]
   [[deployment.targets]]
     name = 'production'
-    url = 's3://broken-semantics?region=sa-east-1'
+    url = 'DEPLOY_S3_URL'
     invalidateCDN = true
-    cloudFrontDistributionID = 'E1IQ2IVCHRKLEW'
+    cloudFrontDistributionID = 'DEPLOY_CF_DISTRIBUTION_ID'

@@ -6,8 +6,7 @@ Personal blog built with Hugo and the Stack theme, deployed to AWS S3 + CloudFro
 
 ## Prerequisites
 
-- Hugo (extended version with deploy support)
-- AWS CLI configured with credentials
+- Hugo extended+withdeploy (v0.133.0+)
 - Git (for theme submodule management)
 
 ## Initial Setup
@@ -23,15 +22,6 @@ Personal blog built with Hugo and the Stack theme, deployed to AWS S3 + CloudFro
    git submodule update --init --recursive
    ```
 
-3. **Configure AWS credentials**
-
-   Create an IAM user with S3 and CloudFront permissions, then configure:
-   ```bash
-   aws configure --profile hugo-deploy
-   ```
-
-   Enter your access key ID, secret key, and set region to `sa-east-1`.
-
 ## Creating New Articles
 
 1. **Create a new post**
@@ -39,104 +29,66 @@ Personal blog built with Hugo and the Stack theme, deployed to AWS S3 + CloudFro
    hugo new posts/my-article-name.md
    ```
 
-   This creates a new file in `content/posts/` with front matter template.
-
-2. **Edit the article**
-
-   Open `content/posts/my-article-name.md` and edit:
-
-   ```markdown
-   +++
-   title = 'My Article Title'
-   date = 2024-05-04T13:52:19-03:00
-   draft = false  # Change to false when ready to publish
-   +++
-
-   Your content here...
-   ```
+2. **Edit the article** — open `content/posts/my-article-name.md` and set `draft = false` when ready to publish.
 
 3. **Preview locally**
    ```bash
-   # Include drafts
    hugo server -D
-
-   # Preview only published posts
-   hugo server
    ```
-
    Visit http://localhost:1313
 
-4. **Publish the article**
+4. **Publish** — set `draft = false`, commit, and push to `main`. CI will build and deploy automatically.
 
-   Set `draft = false` in the article's front matter, then commit:
-   ```bash
-   git add content/posts/my-article-name.md
-   git commit -m "post: add new article about X"
-   git push
-   ```
+## CI/CD Deployment
 
-## Deploying to Production
+Pushing to `main` triggers the [GitHub Actions workflow](.github/workflows/deploy.yml), which:
+1. Builds the site with `hugo --minify`
+2. Syncs to S3 and invalidates CloudFront with `hugo deploy --target production`
 
-1. **Build the site**
-   ```bash
-   hugo
-   ```
+### Required GitHub configuration
 
-   This generates static files in the `public/` directory.
+**Secrets** (Settings → Secrets and variables → Actions → Secrets):
 
-2. **Deploy to S3**
-   ```bash
-   AWS_PROFILE=hugo-deploy hugo deploy --target production
-   ```
+| Secret | Description |
+|---|---|
+| `AWS_ROLE_ARN` | ARN of the IAM role assumed via OIDC |
+| `GA_MEASUREMENT_ID` | Google Analytics measurement ID (e.g. `G-XXXXXXXXXX`) |
 
-   This will:
-   - Upload new/changed files to S3 bucket `broken-semantics`
-   - Invalidate CloudFront CDN cache
-   - Make the site live at https://joaomaia.dev/
+**Variables** (Settings → Secrets and variables → Actions → Variables):
 
-3. **Dry run (preview changes)**
-   ```bash
-   AWS_PROFILE=hugo-deploy hugo deploy --target production --dryRun
-   ```
+| Variable | Description |
+|---|---|
+| `DEPLOY_S3_BUCKET` | S3 bucket full URL |
+| `DEPLOY_CF_DISTRIBUTION_ID` | CloudFront distribution ID |
 
-## Quick Workflow
+### IAM Role setup
+
+The workflow authenticates via OIDC — no long-lived access keys needed. The IAM role must:
+- Trust `token.actions.githubusercontent.com` for this repository's `main` branch
+- Allow `s3:PutObject`, `s3:DeleteObject`, `s3:ListBucket`, `s3:GetObject` on the S3 bucket
+- Allow `cloudfront:CreateInvalidation` on the distribution
+
+See [AWS OIDC documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html) for setup steps.
+
+## Local Deployment
+
+To deploy manually, substitute the placeholders in `hugo.toml` and run:
 
 ```bash
-# Create new post
-hugo new posts/my-new-post.md
+S3_BUCKET=your-bucket DEPLOY_CF_DISTRIBUTION_ID=your-cf-id \
+  sed -i "s|DEPLOY_S3_URL|${DEPLOY_S3_URL}|g; s|DEPLOY_CF_DISTRIBUTION_ID|${DEPLOY_CF_DISTRIBUTION_ID}|g" hugo.toml
 
-# Edit the file, set draft = false when ready
-
-# Preview locally
-hugo server -D
-
-# Build and deploy
-hugo
 AWS_PROFILE=hugo-deploy hugo deploy --target production
-
-# Commit to git
-git add .
-git commit -m "post: add new post about X"
-git push
 ```
+
+> **Note:** Remember to revert `hugo.toml` after a local deploy (`git checkout hugo.toml`).
 
 ## Configuration
 
-- Main config: `hugo.toml`
-- Detailed settings: `config/_default/*.toml`
+- Main config: `hugo.toml` + `config/_default/*.toml`
 - Theme: `themes/hugo-theme-stack` (git submodule)
 - Content: `content/posts/`
-- Static files: `static/`
-- Generated site: `public/` (not committed to git)
-
-## Deployment Configuration
-
-The site deploys to:
-- **S3 Bucket:** `broken-semantics` (region: sa-east-1)
-- **CloudFront Distribution:** E1IQ2IVCHRKLEW
-- **Domain:** joaomaia.dev
-
-Configuration is in `hugo.toml` under `[deployment]`.
+- Generated site: `public/` (not committed)
 
 ## Troubleshooting
 
@@ -145,18 +97,9 @@ Configuration is in `hugo.toml` under `[deployment]`.
 git submodule update --init --recursive
 ```
 
-**AWS credentials error:**
+**Hugo not found or wrong version:**
 ```bash
-# Verify credentials work
-aws s3 ls --profile hugo-deploy
-
-# Re-configure if needed
-aws configure --profile hugo-deploy
+brew install hugo        # install
+brew upgrade hugo        # upgrade
+hugo version             # verify: must include +extended+withdeploy
 ```
-
-**Hugo not found:**
-```bash
-brew install hugo
-```
-
-For more details, see [CLAUDE.md](CLAUDE.md).

@@ -32,6 +32,8 @@ jobs:
           aws-region: sa-east-1
 
       - name: Build and deploy
+        env:
+          HUGO_SERVICES_GOOGLEANALYTICS_ID: ${{ secrets.GA_MEASUREMENT_ID }}
         run: |
           hugo --minify
           hugo deploy --target production

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Categories on Broken Semantics</title>
-        <link>http://localhost:1313/categories/</link>
+        <link>https://joaomaia.dev/categories/</link>
         <description>Recent content in Categories on Broken Semantics</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 20 Dec 2025 21:19:20 -0300</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>Digital Publishing</title>
-        <link>http://localhost:1313/categories/digital-publishing/</link>
-        <pubDate>Sat, 20 Dec 2025 21:19:20 -0300</pubDate>
+        <lastBuildDate>Sun, 01 Mar 2026 21:19:20 -0300</lastBuildDate><atom:link href="https://joaomaia.dev/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Programming</title>
+        <link>https://joaomaia.dev/categories/programming/</link>
+        <pubDate>Sun, 01 Mar 2026 21:19:20 -0300</pubDate>
         
-        <guid>http://localhost:1313/categories/digital-publishing/</guid>
+        <guid>https://joaomaia.dev/categories/programming/</guid>
         <description></description>
         </item>
         

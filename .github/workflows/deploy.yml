@@ -34,8 +34,8 @@ jobs:
       - name: Build and deploy
         env:
           HUGO_SERVICES_GOOGLEANALYTICS_ID: ${{ secrets.GA_MEASUREMENT_ID }}
-          DEPLOY_S3_URL: ${{ vars.DEPLOY_S3_URL }}
-          DEPLOY_CF_DISTRIBUTION_ID: ${{ vars.DEPLOY_CF_DISTRIBUTION_ID }}
+          DEPLOY_S3_URL: ${{ secrets.DEPLOY_S3_URL }}
+          DEPLOY_CF_DISTRIBUTION_ID: ${{ secrets.DEPLOY_CF_DISTRIBUTION_ID }}
         run: |
           sed -i "s|DEPLOY_S3_URL|${DEPLOY_S3_URL}|g" hugo.toml
           sed -i "s|DEPLOY_CF_DISTRIBUTION_ID|${DEPLOY_CF_DISTRIBUTION_ID}|g" hugo.toml
